@@ -15,17 +15,16 @@ rgb_leds.fill(color)
 rgb_leds.write()
 
 while True:
-        
-    sleep(0.02)
+        sleep(0.02)
         for luminance in range (0, max_luminance):
-        color = (luminance, 0, 0)
-        rgb_leds.fill(color)
-        rgb_leds.write()
-        sleep(sleep_interval)        
-    
-    sleep(0.02)
+                color = (luminance, 0, 0)
+                rgb_leds.fill(color)
+                rgb_leds.write()
+                sleep(sleep_interval)        
+        
+        sleep(0.02)
         for luminance in range (max_luminance, 0, -1):
-        color = (luminance, 0, 0)
-        rgb_leds.fill(color)
-        rgb_leds.write()
-        sleep(sleep_interval)
+                color = (luminance, 0, 0)
+                rgb_leds.fill(color)
+                rgb_leds.write()
+                sleep(sleep_interval)
