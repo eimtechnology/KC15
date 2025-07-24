@@ -1,10 +1,9 @@
 import time
 import random
 from machine import Pin, ADC, SPI
-import test.st7789 as st7789  # Assuming the ST7789 library is imported and display is initialized
+import test.st7789 as st7789 
 from board import game_kit
 from test.fonts import vga2_8x8 as font1
-from test.fonts import vga1_16x32 as font2
 
 st7789_res = 0
 st7789_dc = 1
@@ -44,6 +43,7 @@ ENEMY_SPEED = 2
 BULLET_WIDTH = 3
 BULLET_HEIGHT = 5
 BULLET_SPEED = 8
+BULLET_COOL_DOWN = 4
 
 ENEMY_ROWS = 3
 ENEMY_COLS = 5
@@ -108,13 +108,16 @@ class Enemy:
             display.fill_rect(self.x, self.y, ENEMY_WIDTH, ENEMY_HEIGHT, st7789.RED)
 
     def clear(self, width):
-        display.fill_rect(self.old_x, self.old_y, width, ENEMY_HEIGHT, st7789.BLACK)
+        display.fill_rect(self.old_x-2, self.old_y, width+2, ENEMY_HEIGHT, st7789.BLACK)
 
 # Global variables
 player = Player()
 
 enemies = []
+
 player_bullets = []
+bullet_cool_down = 0
+
 enemy_bullets = []
 
 score = 0
@@ -146,7 +149,7 @@ def check_collision(rect1_x, rect1_y, rect1_w, rect1_h, rect2_x, rect2_y, rect2_
             rect1_y + rect1_h > rect2_y)
 
 def update_game():
-    global score, state, enemy_direction, enemy_move_timer, enemy_shoot_timer
+    global score, state, enemy_direction, enemy_move_timer, enemy_shoot_timer, bullet_cool_down
 
     # Read inputs
     joy_x = JOYSTICK_X.read_u16() // 256  # 0-255
@@ -159,7 +162,12 @@ def update_game():
     player.move(dx)
 
     if BUTTON_A.value() == 0:  # Button pressed (active low)
-        player_bullets.append(Bullet(player.x + PLAYER_WIDTH // 2, player.y))
+        if bullet_cool_down > 0:
+            pass
+        else:
+            player_bullets.append(Bullet(player.x + PLAYER_WIDTH // 2, player.y))
+            bullet_cool_down += BULLET_COOL_DOWN
+        
     # Update player bullets
     for bullet in player_bullets[:]:
         bullet.update()
@@ -231,6 +239,11 @@ def update_game():
             enemy_bullets.append(Bullet(shooter.x + ENEMY_WIDTH // 2, shooter.y + ENEMY_HEIGHT, 1))
         enemy_shoot_timer = 0
 
+    if bullet_cool_down > 0:
+        bullet_cool_down -= 1
+    else:
+        pass
+
     # Check if all enemies dead
     if all(not e.alive for e in enemies):
         state = STATE_VICTORY
@@ -261,7 +274,7 @@ def draw_game():
         old_score = score
 
 def start_screen():
-    global state, score, old_score, start_drawn
+    global state, score, old_score, start_drawn, bullet_cool_down, player_bullets, enemy_bullets
     if not start_drawn:
         display.fill(st7789.BLACK)
         display.text(font1, "Space Invaders", 40, 100)
@@ -274,6 +287,9 @@ def start_screen():
         init_enemies()
         display.fill(st7789.BLACK)  # Clear screen once when starting game
         start_drawn = False
+        bullet_cool_down = 0
+        player_bullets = []
+        enemy_bullets = []
 
 def gameover_screen():
     global state, gameover_drawn
