@@ -54,28 +54,10 @@ MMA845x_ADDR = 0x1C
 i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
 #end of accelerator set up
 
-'''
-tf card reader set up
-
-sd_spi = SPI(
-            1,
-            sck=Pin(14),
-            mosi=Pin(15),
-            miso=Pin(12))
-sd_cs = Pin(13, Pin.OUT)
-sd = sdcard.SDCard(sd_spi, sd_cs)
-
-# 挂载 SD 卡
-vfs = os.VfsFat(sd)
-os.mount(vfs, "/sd")
-#end of tf card reader set up
-'''
-
 #buzzer wiring 
 buzzer = Pin(8)
 buzzer_pwm = PWM(buzzer)
 buzzer_pwm.freq(4000)
-
 
 # palyer information
 box_size = 10
@@ -263,19 +245,6 @@ init_sensor()
 l_inputs = [0,0,0,0,0]
 encountered = False
 
-'''
-def detect(player, enemies):
-    for i in range(len(enemies)):
-        print(enemies[0][4])
-        if (player[0] < enemies[i][2] + 35 and
-            player[0] +35 > enemies[i][2] and
-            player[1] < enemies[i][3] + 35 and
-            player[1] + 35 > enemies[i][3] 
-            ):
-            return True
-        else:
-            pass
-'''
 def collision(obj1,obj2):
     if abs(obj1[0] - obj2[0]) < (box_size /2) and abs(obj1[1] - obj2[1]) < (box_size /2):
     #if abs(obj1[0] - obj2[0]) < box_size and abs(obj1[1] - obj2[1]) < box_size:
