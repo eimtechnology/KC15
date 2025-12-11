@@ -41,7 +41,6 @@ buttonB = Pin(10, Pin.IN, Pin.PULL_UP)
 # joystick set up
 x_adc = ADC(Pin(27))  # GP26 = ADC0
 y_adc = ADC(Pin(26))  # GP27 = ADC1
-
 sw = Pin(28, Pin.IN, Pin.PULL_UP)
 
 speed_up = False
@@ -105,7 +104,7 @@ def read_accel():
     return (-x_g, -y_g, -z_g)
 
 '''
-functions about palyer movment
+functions for palyer movment
 '''
 def set_speed_joysick(x_val, y_val, threshold=1490):
     center = 32767
@@ -233,18 +232,6 @@ def draw_clearFrame():
     nextFrame.fill(0x0000)
     tft.blit_buffer(buffer, 0, 0, WIDTH, HEIGHT)
 
-def game_start():
-    pass
-
-def game_end():
-    pass
-
-#the main loop is here
-#scan()
-init_sensor()
-l_inputs = [0,0,0,0,0]
-encountered = False
-
 def collision(obj1,obj2):
     if abs(obj1[0] - obj2[0]) < (box_size /2) and abs(obj1[1] - obj2[1]) < (box_size /2):
     #if abs(obj1[0] - obj2[0]) < box_size and abs(obj1[1] - obj2[1]) < box_size:
@@ -259,8 +246,17 @@ def detect_collision(player, enemies):
             return True
     return False
 
-score = [0,0,0,0]
+def game_start():
+    pass
 
+def game_end():
+    pass
+ 
+init_sensor()
+l_inputs = [0,0,0,0,0]
+encountered = False
+score = [0,0,0,0]
+#the main loop start here
 while True:
     # start initializing for next frame
     #print("reset new frame")
