@@ -16,8 +16,6 @@ pwm = PWM(Pin(19))
 mySong = music(song, pins=[Pin(23)])
 pwm.freq(50)
 
-#image_file0 = "/logo.bin"
-
 st7789_res = 0
 st7789_dc  = 1
 disp_width = 240
