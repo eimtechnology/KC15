@@ -1,6 +1,6 @@
 import uos
 import st7789
-from UI import Option_Box, Band_Selector
+from user_interface import Option_Box, Band_Selector
 from font import vga1_16x32 as font
 from font import vga2_8x8 as small_font
 import framebuf
